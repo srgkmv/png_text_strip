@@ -1,0 +1,15 @@
+[Desktop Action png_text_strip]
+
+Exec=/usr/bin/png_text_strip %F
+
+Name=Strip text from PNG
+Icon=edit-cut
+
+[Desktop Entry]
+Actions=png_text_strip
+
+MimeType=image/png;
+
+ServiceTypes=KonqPopupMenu/Plugin
+Type=Service
+X-KDE-Priority=TopLevel

@@ -1,7 +1,13 @@
 #include <iostream>
 #include <png.h>
+#include <vector>
+#include <iostream>
+#include <filesystem>
+#include <regex>
 
-void remove_png_text_metadata(const char* filename) {
+namespace fs = std::filesystem;
+
+void remove_png_text_metadata(const char * filename) {
     FILE* input_file = fopen(filename, "rb");
     if (!input_file) {
         std::cerr << "Error opening input file: " << filename << std::endl;
@@ -122,14 +128,22 @@ void remove_png_text_metadata(const char* filename) {
     png_destroy_write_struct(&write_png_ptr, &write_info_ptr);
     fclose(output_file);
 }
+
 int main(int argc, char **argv) {
-    if(argc < 2)
-    {
-        printf("Usage: <filename>\n");
-        return -1;
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <pattern>\n";
+        return 1;
     }
-    const char* filename = argv[1];//;
-    remove_png_text_metadata(filename);
-    std::cout << "Text metadata removed. Image saved to " << filename << std::endl;
+
+    for(int i = 1 ;i < argc; i++)
+    {
+        const fs::path path(argv[i]);
+        std::error_code ec;
+        if (fs::is_regular_file(path, ec))
+        {
+            remove_png_text_metadata(argv[i]);
+            std::cout << "Text metadata removed from " << argv[i] << std::endl;
+        }
+    }
     return 0;
 }
